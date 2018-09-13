@@ -27,10 +27,26 @@ class App extends Component {
 }
 
 /*
+Number.MAX_SAFE_INTEGER
+
 
 for(i=0;i<65536;i++) {
     console.log(i.toString(16))
 }
+
+function isprint(char) {
+
+     return !/^\p{White_Space}/u.test(char) && !( /[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(char));
+}
+let ret = [];
+for(i=0;i<75536;i++) {
+  const c = String.fromCharCode(i);
+  if(isprint(c)) {
+    ret.push(c);
+  }
+}
+
+
 
 */
 
