@@ -27,17 +27,16 @@ const process_windows = async (actions) => {
 
   const getItem = async itemId => {
     const result = await db.ref(`v0/item/${itemId}`).limitToLast(1).once("value");
-    const { url } = result.val();
-    if (url) {
-      console.log(url)
+    if(result && result.val() &&  result.val().url ) {
+      console.log(result.val().url )
     }
   }
 
-  const WINDOW_SIZE = 1000;
+  const WINDOW_SIZE = 5000;
   const WINDOWS_QTY = Math.ceil(lastId/WINDOW_SIZE);
   for(var w=0; w<WINDOWS_QTY; w++) {
     const items = Array.from(new Array(WINDOW_SIZE), (x, i) => i + 1 + (w*WINDOW_SIZE));
-    await pMap(items, getItem, { concurrency: 100 });
+    await pMap(items, getItem, { concurrency: 1000 });
   }
 
   process.exit();
