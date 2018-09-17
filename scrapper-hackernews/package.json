@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "firebase": "^5.5.0",
-    "p-limit": "^2.0.0"
+    "p-map": "^1.2.0"
   }
 }
