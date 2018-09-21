@@ -3,15 +3,17 @@ import UrlInput from './UrlInput';
 import withRoot from '../withRoot';
 
 // TODO create a table/array to encode tree symbols with unicode subset
-// TODO /xxxx to redirect to decoded 
 class App extends Component {
 
-
-
   render() {
-    return (
-      <UrlInput />
-    );
+    const { search } = window.location;
+    if(search && search.length > 0) {
+      window.location.href = 'http://www.google.com'
+    } else {
+      return (
+        <UrlInput />
+      );
+    }
   }
 }
 
