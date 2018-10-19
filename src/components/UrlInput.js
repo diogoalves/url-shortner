@@ -6,6 +6,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import { isUrlValid, encodeUrl, getProtocol } from '../util';
 
 const styles = theme => ({
   root: {
@@ -24,18 +25,32 @@ const styles = theme => ({
 class UrlInput extends Component {
   state = {
     url: '',
+    valid: false,
+    encoded: ''
   };
 
   handleChange = event => {
-    this.setState({
-      url: event.target.value
-    });
+    const urlToEncode = event.target.value;
+    if(isUrlValid(urlToEncode)) {
+      const host = window.location.host;
+      const protocol = getProtocol(urlToEncode);
+      const encoded = `${protocol}${host}/${encodeUrl(urlToEncode)}`;
+      this.setState({
+        url: event.target.value,
+        encoded
+      });
+    } else {
+      this.setState({
+        url: event.target.value,
+        encoded: ''
+      });
+    }
   };
 
   render() {
     const { classes } = this.props;
-    const { url } = this.state;
-    const expanded = url.length > 0;
+    const { url, encoded } = this.state;
+    const expanded = encoded.length > 0;
     return (
       <div className={classes.root}>
 
@@ -64,7 +79,7 @@ class UrlInput extends Component {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Typography>
-                {url}
+                {encoded}
               </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
