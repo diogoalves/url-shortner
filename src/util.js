@@ -1,7 +1,7 @@
 import isUrl from 'is-url';
 //import urlExists from 'url-exists-deep'; //use this in server side or try easyXDM(iframes)
 
-const encodeTable = {
+const encodeSymbols = {
   a: 0,
   b: 1,
   c: 2,
@@ -36,15 +36,31 @@ const encodeTable = {
   '%': 7
 }
 
+const encodeBinary = {
+  0: '000',
+  1: '001',
+  2: '010',
+  3: '011',
+  4: '100',
+  5: '101',
+  6: '110',
+  7: '111'
+}
 
 export const isUrlValid = url => isUrl(url);
 
 export const encodeUrl = url => { 
-  const chars = [...url];
+  let fromUrl = url
+                  .replace('http://','')
+                  .replace('https://', '')
+                  .replace('.com', 'f')
+                  .replace('www.', 'g');
+  
+  const chars = [...fromUrl];
+  let encoded = '';
   chars.reduce( (acc, cur) => {
-    
+    encoded += encodeBinary[ encodeSymbols[cur] ];
   })
-  let encoded = url.replace('http://','').replace('https://', '');
   console.log(encoded)
   return encoded;
 }
