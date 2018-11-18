@@ -1,5 +1,6 @@
 import isUrl from 'is-url';
 //import urlExists from 'url-exists-deep'; //use this in server side or try easyXDM(iframes)
+import a from './unicodeEncoder';
 
 const encodeSymbols = {
   a: 0,
@@ -61,8 +62,7 @@ export const encodeUrl = url => {
   chars.reduce( (acc, cur) => {
     encoded += encodeBinary[ encodeSymbols[cur] ];
   })
-  console.log(encoded)
-  return encoded;
+  return uniEncode(packageInTwoBytes(encoded))
 }
 
 export const getProtocol = url => {
@@ -70,6 +70,17 @@ export const getProtocol = url => {
   return 'http://';
 }
 
+const packageInTwoBytes = encoded => {
+  const spliced = encoded.match(/.{1,16}/g);
+  const padded = spliced.map( e => e.padEnd(16, '0'));
+  return padded;
+}
+
+const uniEncode = packages => {
+  const ret = packages.map( e=> a[parseInt(e,2)]);
+  const ret2 = ret.reduce( (acc, cur) => acc.concat(String.fromCharCode(cur)), '' );
+  return ret2;
+}
 /*
 const test = char => !(/[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(char)) && !/^\p{White_Space}/u.test(char);
 
@@ -86,14 +97,26 @@ const generateUnicodeChars3 = () => {
   }, []);
 }
 
-const generateUnicodeChars = () => {
+const generateUnicodeChars2 = () => {
   let ret = [];
   for (i = 0; i < 65536; i++) {
     const c = String.fromCharCode(i);
     if (test(c)) {
-      ret.push(c);
+      ret.push({key: i, value: c});
     }
   }
   return ret;
 }
+
+const generateUnicodeChars2 = () => {
+  let ret = [];
+  for (i = 0; i < 65536; i++) {
+    const c = String.fromCharCode(i);
+    if (test(c)) {
+      ret.push(i);
+    }
+  }
+  return ret;
+}
+
 */
