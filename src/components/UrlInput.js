@@ -6,7 +6,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import { isUrlValid, encodeUrl, getProtocol } from '../util';
+import { isUrlValid, getProtocol } from '../util';
+import { encodeUrl } from '../encode';
 
 const styles = theme => ({
   root: {
