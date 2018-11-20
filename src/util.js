@@ -50,71 +50,50 @@ const encodeBinary = {
 
 export const isUrlValid = url => isUrl(url);
 
-export const encodeUrl = url => { 
-  let fromUrl = url
-                  .replace('http://','')
-                  .replace('https://', '')
-                  .replace('.com', 'f')
-                  .replace('www.', 'g');
-  
-  const chars = [...fromUrl];
-  let encoded = '';
-  chars.reduce( (acc, cur) => {
-    encoded += encodeBinary[ encodeSymbols[cur] ];
-  })
-  return uniEncode(packageInTwoBytes(encoded))
-}
-
 export const getProtocol = url => {
   if(url.startsWith('https://')) return 'https://';
   return 'http://';
 }
 
-const packageInTwoBytes = encoded => {
-  const spliced = encoded.match(/.{1,16}/g);
-  const padded = spliced.map( e => e.padEnd(16, '0'));
-  return padded;
+export const encodeUrl = url => { 
+  return unicodeEncode(packageInTwoBytes(encodeBits(splitInChars(preEncode(url)))))
 }
 
-const uniEncode = packages => {
-  const ret = packages.map( e=> a[parseInt(e,2)]);
-  const ret2 = ret.reduce( (acc, cur) => acc.concat(String.fromCharCode(cur)), '' );
-  return ret2;
-}
+const preEncode = url => 
+  url
+    .replace('http://','')
+    .replace('https://', '')
+    .replace('.com', 'f')
+    .replace('www.', 'g');
+  
+const splitInChars = string => [...string];
+
+const encodeBits = chars => 
+  chars.reduce( (acc, cur) => acc += encodeBinary[ encodeSymbols[cur] ], '');
+
+const packageInTwoBytes = encoded => 
+  encoded
+    .match(/.{1,16}/g)
+    .map( e => e.padEnd(16, '0'));
+
+
+const unicodeEncode = packages => 
+  packages
+    .map( e=> a[parseInt(e,2)])
+    .reduce( (acc, cur) => acc.concat(String.fromCharCode(cur)), '' );
+
 /*
 const test = char => !(/[\x00-\x08\x0E-\x1F\x80-\xFF]/.test(char)) && !/^\p{White_Space}/u.test(char);
 
-const generateUnicodeChars3 = () => {
-  const range = Array.from(Array(65536).keys()); //returns keys of an Array with 65536 roles, like [0,1,...,65536]
-
-  return range.reduce((acc, cur, index) => {
-    const c = String.fromCharCode(index);
-    if (test(c)) {
-      return acc.concat(c);
-    } else {
-      return acc;
-    }
-  }, []);
-}
-
 const generateUnicodeChars2 = () => {
   let ret = [];
-  for (i = 0; i < 65536; i++) {
-    const c = String.fromCharCode(i);
-    if (test(c)) {
-      ret.push({key: i, value: c});
-    }
-  }
-  return ret;
-}
-
-const generateUnicodeChars2 = () => {
-  let ret = [];
-  for (i = 0; i < 65536; i++) {
+  let i = 0;
+  while(ret.length < 65536) {
     const c = String.fromCharCode(i);
     if (test(c)) {
       ret.push(i);
     }
+    i++;
   }
   return ret;
 }
