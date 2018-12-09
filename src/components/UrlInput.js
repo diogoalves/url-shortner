@@ -35,7 +35,7 @@ class UrlInput extends Component {
     if(isUrlValid(urlToEncode)) {
       const host = window.location.host;
       const protocol = getProtocol(urlToEncode);
-      const encoded = `${protocol}${host}/${encodeUrl(urlToEncode)}`;
+      const encoded = `${protocol}${host}/?${encodeUrl(urlToEncode)}`;
       this.setState({
         url: event.target.value,
         encoded

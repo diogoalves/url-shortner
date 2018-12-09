@@ -1,3 +1,5 @@
+import { direct } from './codetables';
+
 export const encodeUrl = url => 
   unicodeEncode(packageInTwoBytes(encodeBits(splitInChars(preEncode(url)))));
 
@@ -18,10 +20,13 @@ const packageInTwoBytes = encoded =>
     .match(/.{1,16}/g)
     .map( e => e.padEnd(16, '0'));
 
+const unicodeEncode = packages => {
+  console.log( packages.map( e=> direct[parseInt(e,2)]) )
+  return packages
+  .map( e=> parseInt(e,2))
+  .reduce( (acc, cur) => acc.concat(String.fromCharCode(direct[cur])), '' );
 
-const unicodeEncode = packages => 
-  packages
-    .reduce( (acc, cur) => acc.concat(String.fromCharCode(cur)), '' );
+}
 
 
 const encodeSymbols = {
